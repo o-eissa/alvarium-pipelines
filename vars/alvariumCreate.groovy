@@ -13,10 +13,13 @@ import com.alvarium.SdkInfo;
 import com.alvarium.annotators.Annotator;
 import com.alvarium.utils.PropertyBag;
 
-def call(List<String> annotatorKinds, String artifactPath=null) {
+def call(List<String> annotatorKinds, Map<String,String> optionalParameters=[:]) {
+    String artifactPath = optionalParameters['artifactPath'] ? optionalParameters['artifactPath'] : null
+    String checksumPath = optionalParameters['checksumPath'] ? optionalParameters['checksumPath'] : "${JENKINS_HOME}/jobs/${JOB_NAME}/${BUILD_NUMBER}/${artifact.getName()}.checksum"
+    String sourceCodeChecksumPath = optionalParameters['sourceCodeChecksumPath'] ? optionalParameters['sourceCodeChecksumPath'] : "${JENKINS_HOME}/${JOB_NAME}/${BUILD_NUMBER}/checksum"
 
     if (annotatorKinds.contains('checksum') && artifactPath == null) {
-        error "Checksum annotator requires the `artifactPath` parameter"
+        error "Checksum annotator requires the `artifactPath` in optionalParameters"
     }
 
     Logger logger = LogManager.getRootLogger()
@@ -36,6 +39,8 @@ def call(List<String> annotatorKinds, String artifactPath=null) {
     def (Annotator[] annotators, PropertyBag ctx) = alvariumGetAnnotators(
         annotatorKinds,
         artifactPath,
+        checksumPath,
+        sourceCodeChecksumPath,
         sdkInfo,
         logger    
     )
