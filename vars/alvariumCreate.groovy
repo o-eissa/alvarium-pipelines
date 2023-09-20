@@ -17,7 +17,9 @@ def call(List<String> annotatorKinds, Map<String,String> optionalParameters=[:])
     String artifactPath = optionalParameters['artifactPath'] ? optionalParameters['artifactPath'] : null
     String checksumPath = optionalParameters['checksumPath'] ? optionalParameters['checksumPath'] : "${JENKINS_HOME}/jobs/${JOB_NAME}/${BUILD_NUMBER}/${artifact.getName()}.checksum"
     String sourceCodeChecksumPath = optionalParameters['sourceCodeChecksumPath'] ? optionalParameters['sourceCodeChecksumPath'] : "${JENKINS_HOME}/${JOB_NAME}/${BUILD_NUMBER}/checksum"
-
+    echo "artifactPath" + artifactPath
+    echo "checksumPath" + checksumPath
+    echo "sourceCodeChecksumPath" + sourceCodeChecksumPath
     if (annotatorKinds.contains('checksum') && artifactPath == null) {
         error "Checksum annotator requires the `artifactPath` in optionalParameters"
     }
