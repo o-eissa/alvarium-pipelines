@@ -16,13 +16,16 @@ import com.alvarium.utils.PropertyBag;
 def call(List<String> annotatorKinds, Map<String,String> optionalParameters=[:]) {
     String artifactPath = optionalParameters['artifactPath'] ? optionalParameters['artifactPath'] : null
     String checksumPath
-    String sourceCodeChecksumPath = optionalParameters['sourceCodeChecksumPath'] ? optionalParameters['sourceCodeChecksumPath'] : "${JENKINS_HOME}/${JOB_NAME}/${BUILD_NUMBER}/checksum"
+    String sourceCodeChecksumPath = optionalParameters['sourceCodeChecksumPath'] ?
+        optionalParameters['sourceCodeChecksumPath'] :
+        "${JENKINS_HOME}/${JOB_NAME}/${BUILD_NUMBER}/checksum"
 
     if (annotatorKinds.contains('checksum')) {
         if(artifactPath == null){
         error "Checksum annotator requires the `artifactPath` in optionalParameters"
         }
-        checksumPath = optionalParameters['checksumPath'] ? optionalParameters['checksumPath'] : "${JENKINS_HOME}/jobs/${JOB_NAME}/${BUILD_NUMBER}/${new File(artifactPath).getName()}.checksum"
+        checksumPath = optionalParameters['checksumPath'] ? optionalParameters['checksumPath'] :
+            "${JENKINS_HOME}/jobs/${JOB_NAME}/${BUILD_NUMBER}/${new File(artifactPath).getName()}.checksum"
     }
 
     Logger logger = LogManager.getRootLogger()
@@ -35,7 +38,7 @@ def call(List<String> annotatorKinds, Map<String,String> optionalParameters=[:])
     configFileProvider(
         [configFile(fileId: 'alvarium-config', variable: 'SDK_INFO')]) {
         jsonString = new File("$SDK_INFO").text
-    }
+        }
 
     SdkInfo sdkInfo = getSdkInfoFromJson(jsonString)
 
